@@ -275,3 +275,33 @@ Jalankan pada `Strix`
 iptables -A FORWARD -p tcp -d 10.1.0.115 -i eth0 -j DROP 
 iptables -A FORWARD -p udp -d 10.1.0.115 -i eth0 -j DROP
 ```
+
+Testing dengan ping ke IP WISE (`10.1.0.115`)
+
+
+## Soal 3
+Loid meminta kalian untuk membatasi DHCP dan DNS Server hanya boleh menerima maksimal 2 koneksi ICMP secara bersamaan menggunakan iptables, selebihnya didrop.
+
+### Penjelasan
+Karena DHCP dan DNS hanya boleh 2 ICMP, berarti harus konfigurasi pada keduanya.
+
+Jalankan pada `WISE` dan `Eden`
+```bash
+iptables -A INPUT -p icmp -m connlimit --connlimit-above 2 --connlimit-mask 0 -j DROP
+```
+
+Testing dengan ping IP Eden (`10.1.0.114`) ke client
+
+
+## Soal 4
+Akses menuju Web Server hanya diperbolehkan disaat jam kerja yaitu Senin sampai Jumat pada pukul 07.00 - 16.00.
+
+## Penjelasan
+Setting di `Garden` dan `SSS` sebagai web server
+```bash
+iptables -A INPUT -m time --timestart 07:00 --timestop 16:00 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+iptables -A INPUT -j REJECT
+```
+
+
+Testing dengan ping IP Garden (`10.1.0.122`) di client
